@@ -1,4 +1,4 @@
-package misc.java;
+package misc;
 
 import io.github.humbleui.jwm.Event;
 import io.github.humbleui.jwm.EventMouseMove;
