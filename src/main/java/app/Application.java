@@ -1,5 +1,6 @@
 package app;
 
+import controls.Label;
 import io.github.humbleui.jwm.*;
 import io.github.humbleui.jwm.skija.EventFrameSkija;
 import io.github.humbleui.skija.Canvas;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.util.function.Consumer;
 
 import static app.Colors.APP_BACKGROUND_COLOR;
+import static app.Colors.PANEL_BACKGROUND_COLOR;
 
 /**
  * Класс окна приложения
@@ -35,19 +37,24 @@ public class Application implements Consumer<Event> {
     /**
      * Конструктор окна приложения
      */
+    /**
+     * отступы панелей
+     */
+    public static final int PANEL_PADDING = 5;
+    /**
+     * Первый заголовок
+     */
+    private final Label label;
+
     public Application() {
         // создаём окно
         window = App.makeWindow();
+
+        // создаём первый заголовок
+        label = new Label(window, true, PANEL_BACKGROUND_COLOR, PANEL_PADDING,
+                "Привет, мир!", true, true);
         // задаём обработчиком событий текущий объект
         window.setEventListener(this);
-        // задаём заголовок
-        window.setTitle("Java 2D");
-        // задаём размер окна
-        window.setWindowSize(900, 900);
-        // задаём его положение
-        window.setWindowPosition(100, 100);
-        // задаём иконку
-
         switch (Platform.CURRENT) {
             case WINDOWS -> window.setIcon(new File("src/main/resources/windows.ico"));
             case MACOS -> window.setIcon(new File("src/main/resources/macos.icns"));
@@ -105,22 +112,24 @@ public class Application implements Consumer<Event> {
      * @param canvas   низкоуровневый инструмент рисования примитивов от Skija
      * @param windowCS СК окна
      */
+
+    /**
+     * Рисование
+     *
+     * @param canvas   низкоуровневый инструмент рисования примитивов от Skija
+     * @param windowCS СК окна
+     */
     public void paint(Canvas canvas, CoordinateSystem2i windowCS) {
         // запоминаем изменения (пока что там просто заливка цветом)
         canvas.save();
         // очищаем канвас
         canvas.clear(APP_BACKGROUND_COLOR);
-        // создаём кисть
-        Paint paint = new Paint();
-        // задаём цвет рисования
-        paint.setColor(Misc.getColor(100, 255, 255, 255));
-        CoordinateSystem2i rectCS = new CoordinateSystem2i(
-                windowCS.getSize().x / 3, windowCS.getSize().y / 3,
-                windowCS.getSize().x / 3, windowCS.getSize().y / 3
-        );
-        // рисуем квадрат
-        canvas.drawRRect(rectCS.getRRect(4), paint);
-        // восстанавливаем состояние канваса
+
+        // рисуем заголовок в точке [100,100] с шириной и выостой 200
+        label.paint(canvas, new CoordinateSystem2i(100, 100, 200, 200));
+
+
         canvas.restore();
     }
+
 }
