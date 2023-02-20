@@ -175,11 +175,9 @@ public class Application implements Consumer<Event> {
 
 
     /**
-     * Рисование
-     *
-     * @param canvas   низкоуровневый инструмент рисования примитивов от Skija
-     * @param windowCS СК окна
+     * Представление проблемы
      */
+    public static Task task;
     public void paint(Canvas canvas, CoordinateSystem2i windowCS) {
         // запоминаем изменения (пока что там просто заливка цветом)
         canvas.save();
