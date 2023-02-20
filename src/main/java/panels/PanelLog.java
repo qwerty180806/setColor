@@ -23,6 +23,11 @@ import static app.Fonts.FONT12;
  */
 public class PanelLog extends GridPanel {
     /**
+     * Максимальная длина строки лога
+     */
+    private static final int MAX_LOG_LINE_LENGTH = 80;
+
+    /**
      * Добавить info запись
      *
      * @param text текст записи
@@ -88,8 +93,7 @@ public class PanelLog extends GridPanel {
     /**
      * Максимальная длина строки лога
      */
-    private static final int MAX_LOG_LINE_LENGTH = 80;
-
+    /*
     /**
      * Запись
      */
