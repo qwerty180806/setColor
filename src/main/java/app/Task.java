@@ -21,9 +21,9 @@ public class Task {
      */
     public static final String TASK_TEXT = """
             ПОСТАНОВКА ЗАДАЧИ:
-            Заданы два множества точек в вещественном
-            пространстве. Требуется построить пересечение
-            и разность этих множеств""";
+            На плоскости задано множество точек. Найти окружность, содержащую внутри себя хотя бы две точки множества,\s
+            имеющую наибольшую плотность точек внутри себя (количество точек на единицу площади).
+            """;
 
     /**
      * Вещественная система координат задачи
@@ -38,6 +38,9 @@ public class Task {
      */
     private static final int POINT_SIZE = 3;
 
+
+    Circle circle;
+
     /**
      * Задача
      *
@@ -47,7 +50,7 @@ public class Task {
     public Task(CoordinateSystem2d ownCS, ArrayList<Point> points) {
         this.ownCS = ownCS;
         this.points = points;
-
+        circle = new Circle(new Vector2d(0, 1), new Vector2d(3, 4));
     }
 
     /**
@@ -71,20 +74,19 @@ public class Task {
                 // Сохраняем последнюю СК
                 lastWindowCS = windowCS;
             }
+            circle.render(canvas, windowCS, ownCS);
         }
         canvas.restore();
     }
+
     /**
      * последняя СК окна
      */
     protected CoordinateSystem2i lastWindowCS;
 
-    /**
-     * Клик мыши по пространству задачи
-     *
-     * @param pos         положение мыши
-     * @param mouseButton кнопка мыши
-     */
+
+    Vector2d prevClick;
+
     /**
      * Клик мыши по пространству задачи
      *
@@ -97,22 +99,27 @@ public class Task {
         Vector2d taskPos = ownCS.getCoords(pos, lastWindowCS);
         // если левая кнопка мыши, добавляем в первое множество
         if (mouseButton.equals(MouseButton.PRIMARY)) {
-            addPoint(taskPos, Point.PointSet.FIRST_SET);
+            addPoint(taskPos);
             // если правая, то во второе
         } else if (mouseButton.equals(MouseButton.SECONDARY)) {
-            addPoint(taskPos, Point.PointSet.SECOND_SET);
+            if (prevClick == null) {
+                prevClick = taskPos;
+            } else {
+                circle = new Circle(prevClick, taskPos);
+                prevClick = null;
+            }
         }
     }
+
     /**
      * Добавить точку
      *
-     * @param pos      положение
-     * @param pointSet множество
+     * @param pos положение
      */
-    public void addPoint(Vector2d pos, Point.PointSet pointSet) {
-        Point newPoint = new Point(pos, pointSet);
+    public void addPoint(Vector2d pos) {
+        Point newPoint = new Point(pos);
         points.add(newPoint);
         // Добавляем в лог запись информации
-        PanelLog.info("точка " + newPoint + " добавлена в " + newPoint.getSetName());
+        PanelLog.info("точка " + newPoint + " добавлена ");
     }
 }
